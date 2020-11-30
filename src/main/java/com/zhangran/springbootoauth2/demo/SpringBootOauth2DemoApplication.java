@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.*;
 import org.springframework.security.core.annotation.*;
 import org.springframework.security.oauth2.core.user.*;
 import org.springframework.security.web.authentication.*;
+import org.springframework.security.web.csrf.*;
 import org.springframework.web.bind.annotation.*;
 
 @SpringBootApplication
@@ -32,6 +33,12 @@ public class SpringBootOauth2DemoApplication extends WebSecurityConfigurerAdapte
                 .authorizeRequests(a -> a
                         .antMatchers("/", "/error", "/webjars/**").permitAll()
                         .anyRequest().authenticated()
+                )
+                .logout(l -> l
+                        .logoutSuccessUrl("/").permitAll()
+                )
+                .csrf(c -> c
+                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 )
                 .exceptionHandling(e -> e
                         .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
